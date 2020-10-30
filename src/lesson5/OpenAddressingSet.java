@@ -52,10 +52,6 @@ public class OpenAddressingSet<T> extends AbstractSet<T> {
         return false;
     }
 
-    private class Deleted extends Object {
-        private final Object a = null;
-    }
-
     /**
      * Добавление элемента в таблицу.
      *
@@ -71,7 +67,7 @@ public class OpenAddressingSet<T> extends AbstractSet<T> {
         int startingIndex = startingIndex(t);
         int index = startingIndex;
         Object current = storage[index];
-        while (current != null && !current.equals(new Deleted())) {
+        while (current != null) {
             if (current.equals(t)) {
                 return false;
             }
@@ -99,23 +95,7 @@ public class OpenAddressingSet<T> extends AbstractSet<T> {
      */
     @Override
     public boolean remove(Object o) {
-        T elem = (T) o;
-        int startingIndex = startingIndex(elem);
-        int index = startingIndex;
-        Object current = storage[index];
-        while (current != null && !current.equals(elem)) {
-            index = (index + 1) % capacity;
-            if (index == startingIndex) {
-                return false;
-            }
-            current = storage[index];
-        }
-        if (current != null) {
-            storage[index] = new Deleted();
-            size--;
-            return true;
-        }
-        return false;
+        return super.remove(o);
     }
 
     /**
