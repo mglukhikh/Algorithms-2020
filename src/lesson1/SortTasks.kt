@@ -2,6 +2,8 @@
 
 package lesson1
 
+import java.io.File
+
 /**
  * Сортировка времён
  *
@@ -129,8 +131,46 @@ fun sortTemperatures(inputName: String, outputName: String) {
  * 2
  * 2
  */
+fun repeatedNumber(list: IntArray): Int {
+    val count = mutableMapOf<Int, Int>()
+    for (i in list.indices) {
+        val n = list[i]
+        count[n] = (count[n] ?: 0) + 1
+    }
+    return count.maxWithOrNull(
+        Comparator { o1, o2 -> if (o1.value != o2.value) o1.value.compareTo(o2.value) else -o1.key.compareTo(o2.key) }
+    )?.key ?: -1
+}
+
 fun sortSequence(inputName: String, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+
+    val array = mutableListOf<String>()
+    File(inputName).forEachLine {
+        array.add(it)
+    }
+
+    val arr = IntArray(array.size)
+    for (i in array.indices) {
+        arr[i] = array[i].toInt()
+    }
+
+    val number = repeatedNumber(arr).toString()
+
+    var count = 0
+    if (number != "-1") {
+        for (i in array.indices) {
+            if (array[i] != number) {
+                writer.write(array[i])
+                writer.newLine()
+            } else count++
+        }
+    }
+    for (i in 0 until count) {
+        writer.write(number)
+        writer.newLine()
+    }
+    writer.close()
 }
 
 /**
